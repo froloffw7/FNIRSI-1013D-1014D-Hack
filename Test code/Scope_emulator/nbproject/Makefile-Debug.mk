@@ -50,6 +50,12 @@ OBJECTFILES= \
 	${OBJECTDIR}/f1c100s_tcon.o \
 	${OBJECTDIR}/f1c100s_timer.o \
 	${OBJECTDIR}/f1c100s_uart.o \
+	${OBJECTDIR}/f1c100s_mmc.o \
+	${OBJECTDIR}/f1c100s_log.o \
+	${OBJECTDIR}/sd.o \
+	${OBJECTDIR}/sdmmc-internal.o \
+	${OBJECTDIR}/sd_trace.o \
+	${OBJECTDIR}/sd_blk.o \
 	${OBJECTDIR}/lcdisplay.o \
 	${OBJECTDIR}/mousehandling.o \
 	${OBJECTDIR}/touchpanel.o \
@@ -154,6 +160,36 @@ ${OBJECTDIR}/f1c100s_uart.o: f1c100s_uart.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -I/usr/include/freetype2 -std=c99 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/f1c100s_uart.o f1c100s_uart.c
+
+${OBJECTDIR}/f1c100s_mmc.o: f1c100s_mmc.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -I/usr/include/freetype2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/f1c100s_mmc.o f1c100s_mmc.c
+
+${OBJECTDIR}/f1c100s_log.o: f1c100s_log.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -I/usr/include/freetype2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/f1c100s_log.o f1c100s_log.c
+
+${OBJECTDIR}/sd.o: sd.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -I/usr/include/freetype2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sd.o sd.c
+
+${OBJECTDIR}/sdmmc-internal.o: sdmmc-internal.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -I/usr/include/freetype2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sdmmc-internal.o sdmmc-internal.c
+
+${OBJECTDIR}/sd_trace.o: sd_trace.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -I/usr/include/freetype2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sd_trace.o sd_trace.c
+
+${OBJECTDIR}/sd_blk.o: sd_blk.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -I/usr/include/freetype2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sd_blk.o sd_blk.c
 
 ${OBJECTDIR}/lcdisplay.o: lcdisplay.c
 	${MKDIR} -p ${OBJECTDIR}
