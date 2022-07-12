@@ -7,10 +7,12 @@
 
 bool blk_is_writable(FILE *blk) {
 	if (blk) return true;
+	return false;
 }
 
 bool blk_is_inserted(FILE *blk) {
 	if (blk) return true;
+	return false;
 }
 
 void blk_get_geometry(FILE *blk, uint64_t *sect) {
