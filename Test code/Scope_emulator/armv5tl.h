@@ -598,6 +598,7 @@ struct tagARMV5TL_CORE
   
   F1C100S_UART              f1c100s_uart[3];          //UART 0-2 control registers
   F1C100S_SPI               f1c100s_spi[2];           //SPI 0-1 control registers
+  F1C100S_MMC               f1c100s_mmc[2];           //MMC 0-1 control registers
   
   F1C100S_TCON              f1c100s_tcon;             //LCD timing control registers
   F1C100S_DEBE              f1c100s_debe;             //Display engine back end control registers
@@ -624,14 +625,14 @@ struct tagARMV5TL_CORE
   //Debug and tracing support
   FILE                     *TraceFilePointer;         //Null if tracing is disabled
   
-  uint32_t                 breakpointaddress;         //Instruction address for breakpoint
+  uint32_t                  breakpointaddress;        //Instruction address for breakpoint
   
-  uint32_t                 tracetriggeraddress;       //Instruction address to start tracing on
-  uint32_t                 tracetriggered;            //Flag to signal tracing has been triggered
-  uint32_t                 tracecount;                //Counter for limiting trace files to 256K Lines
-  uint32_t                 tracefileindex;            //Index counter for the trace file name
-  uint32_t                 tracebufferenabled;        //Flag to signal writing into the trace buffer is enabled
-  uint32_t                 traceindex;                //Index into the trace buffer
+  uint32_t                  tracetriggeraddress;      //Instruction address to start tracing on
+  uint32_t                  tracetriggered;           //Flag to signal tracing has been triggered
+  uint32_t                  tracecount;               //Counter for limiting trace files to 256K Lines
+  uint32_t                  tracefileindex;           //Index counter for the trace file name
+  uint32_t                  tracebufferenabled;       //Flag to signal writing into the trace buffer is enabled
+  uint32_t                  traceindex;               //Index into the trace buffer
   ARMV5TL_TRACE_ENTRY       tracebuffer[4096];        //A trace buffer to be able to get pre trace trigger info
 };
 

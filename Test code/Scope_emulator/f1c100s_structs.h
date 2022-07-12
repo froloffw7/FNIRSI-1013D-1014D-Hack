@@ -16,6 +16,7 @@ typedef struct tagF1C100S_TIMER            F1C100S_TIMER;
 typedef struct tagF1C100S_INTC             F1C100S_INTC;
 typedef struct tagF1C100S_SPI              F1C100S_SPI;
 typedef struct tagF1C100S_UART             F1C100S_UART;
+typedef struct tagF1C100S_MMC              F1C100S_MMC;
 typedef struct tagF1C100S_PIO_PORT         F1C100S_PIO_PORT;
 typedef struct tagF1C100S_PIO_INT          F1C100S_PIO_INT;
 typedef struct tagF1C100S_PIO_DDR          F1C100S_PIO_DDR;
@@ -348,6 +349,54 @@ struct tagF1C100S_UART
   uint8_t rxfifo[64];
 };
 
+//Allwinner SD Host Controller registers
+struct tagF1C100S_MMC
+{
+  F1C100S_MEMORY global_ctl;        /**< Global Control */
+  F1C100S_MEMORY clock_ctl;         /**< Clock Control */
+  F1C100S_MEMORY timeout;           /**< Timeout */
+  F1C100S_MEMORY bus_width;         /**< Bus Width */
+  F1C100S_MEMORY block_size;        /**< Block Size */
+  F1C100S_MEMORY byte_count;        /**< Byte Count */
+
+  F1C100S_MEMORY command;           /**< Command */
+  F1C100S_MEMORY command_arg;       /**< Command Argument */
+  F1C100S_MEMORY response[4];       /**< Command Response */
+
+  F1C100S_MEMORY irq_mask;          /**< Interrupt Mask */
+  F1C100S_MEMORY irq_status;        /**< Raw Interrupt Status */
+  F1C100S_MEMORY status;            /**< Status */
+
+  F1C100S_MEMORY fifo_wlevel;       /**< FIFO Water Level */
+  F1C100S_MEMORY fifo_func_sel;     /**< FIFO Function Select */
+  F1C100S_MEMORY debug_enable;      /**< Debug Enable */
+  F1C100S_MEMORY auto12_arg;        /**< Auto Command 12 Argument */
+  F1C100S_MEMORY newtiming_set;     /**< SD New Timing Set */
+  F1C100S_MEMORY newtiming_debug;   /**< SD New Timing Debug */
+  F1C100S_MEMORY hardware_rst;      /**< Hardware Reset */
+  F1C100S_MEMORY dmac;              /**< Internal DMA Controller Control */
+  F1C100S_MEMORY desc_base;         /**< Descriptor List Base Address */
+  F1C100S_MEMORY dmac_status;       /**< Internal DMA Controller Status */
+  F1C100S_MEMORY dmac_irq;          /**< Internal DMA Controller IRQ Enable */
+  F1C100S_MEMORY card_threshold;    /**< Card Threshold Control */
+  F1C100S_MEMORY startbit_detect;   /**< eMMC DDR Start Bit Detection Control */
+  F1C100S_MEMORY response_crc;      /**< Response CRC */
+  F1C100S_MEMORY data_crc[8];       /**< Data CRC */
+  F1C100S_MEMORY status_crc;        /**< Status CRC */
+
+  //Internal registers
+  uint32_t       irq;
+  uint32_t       transfer_cnt;
+    /** @} */
+  //Not directly addressable are the two fifo's each uart interface has
+  uint8_t        txfifo[64];
+  uint8_t        rxfifo[64];
+  //
+  uint32_t       *dma_as;
+  uint32_t       dma_status;
+  struct SDState *sd;
+};
+
 //----------------------------------------------------------------------------------------------------------------------------------
 //The PIO registers
 struct tagF1C100S_PIO_PORT
@@ -491,6 +540,7 @@ struct tagF1C100S_DEBE
   F1C100S_MEMORY coef22;
   F1C100S_MEMORY coef23;
 };
+
 
 //----------------------------------------------------------------------------------------------------------------------------------
 

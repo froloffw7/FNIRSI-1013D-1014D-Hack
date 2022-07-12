@@ -201,8 +201,10 @@ void *armemulatorthread(void *arg)
   height = (DESIGN_HEIGHT * xc.scaler) + BORDER_SIZE_2;
   
   //Calculate a nice position on the screen
-  x = 50;
-  y = 50;
+  //x = 50;
+  //y = 50;
+  x = 0;
+  y = 0;
   
   //Set the window to the new position and dimensions
   XMoveResizeWindow(display, win, x, y, width, height);

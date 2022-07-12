@@ -226,6 +226,8 @@ void ArmV5tlSetup(PARMV5TL_CORE core)
   
   //Clear everything
   memset(core, 0, sizeof(ARMV5TL_CORE));
+  //Init MMC controller
+  F1C100sMMC0Init(core);
   
   //Switch to the supervisor mode
   core->current_mode = ARM_MODE_SUPERVISOR;
@@ -900,7 +902,7 @@ ARMV5TL_ADDRESS_MAP address_map[] =
   { 0x01C0B000, 0x01C0BFFF,            NULL,              NULL,                NULL },   //TVD
   { 0x01C0C000, 0x01C0CFFF,     F1C100sTCON,   F1C100sTCONRead,    F1C100sTCONWrite },   //TCON
   { 0x01C0E000, 0x01C0EFFF,            NULL,              NULL,                NULL },   //VE
-  { 0x01C0F000, 0x01C0FFFF,            NULL,              NULL,                NULL },   //SD/MMC0
+  { 0x01C0F000, 0x01C0FFFF,     F1C100sMMC0,   F1C100sMMC0Read,    F1C100sMMC0Write },   //SD/MMC0
   { 0x01C10000, 0x01C10FFF,            NULL,              NULL,                NULL },   //SD/MMC1
   { 0x01C13000, 0x01C13FFF,            NULL,              NULL,                NULL },   //USB-OTG
   { 0x01C20000, 0x01C203FF,      F1C100sCCU,    F1C100sCCURead,     F1C100sCCUWrite },   //CCU
