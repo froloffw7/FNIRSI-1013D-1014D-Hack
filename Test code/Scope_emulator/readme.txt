@@ -113,5 +113,8 @@ Coupling 0x34 (0x37)
 AC       0x00
 DC       0x01
 
-
-
+----------------------------------------------------------------------------------------------
+12-JULY-2022 21:50
+Added SD card support (AllWinner MMC interface hardware emulation).
+This patch allow running of unmodified factory firmware.
+This is very rough implementation based on the Qemu project sources. Only polling mode (direct and DMA based) which factory software uses. 
