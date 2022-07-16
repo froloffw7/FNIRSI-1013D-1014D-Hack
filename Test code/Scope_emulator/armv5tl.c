@@ -73,10 +73,13 @@
 
 //#define MY_BREAK_POINT_1  0x8001263c  //End of time div print
 
+#define MY_BREAK_POINT_1  0x80035454  //while loop in test code
 #define MY_BREAK_POINT_2  0x80035454  //font function
 
+// 0x80016848
+//#define MY_BREAK_POINT_3  0x800167C8  //sd_send_data
+#define MY_BREAK_POINT_3  0x80005a0c  //sd_send_data
 
-#define MY_BREAK_POINT_1  0x80035454  //while loop in test code
 
 //----------------------------------------------------------------------------------------------------------------------------------
 
@@ -144,6 +147,22 @@ void stoparmcore(void)
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------
+static int chk_boot_loader(FILE *fp, void *cpu_mem)
+{
+  uint8_t  buffer[32];
+  uint32_t load_len;
+  
+  fread(buffer, 1, 32, fp);
+  if(memcmp(&buffer[4], "eGON.BT0", 8) == 0) {
+    load_len = ((buffer[19] << 24) | (buffer[18] << 16) | (buffer[17] << 8) | buffer[16]);
+    fread(cpu_mem, 1, load_len, fp);
+    fseek(fp, 0, SEEK_SET);
+    return 1;
+  }
+  return 0;  
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------
 
 void *armcorethread(void *arg)
 {
@@ -166,30 +185,50 @@ void *armcorethread(void *arg)
   //Initialize the core
   ArmV5tlSetup(parm_core);
   
-  //Load a program to arm memory
+  int   boot_ok = 0;
+  //Load a bootloader program to arm memory
+#if 0
   FILE *fp = fopen("scope_spl.bin", "rb");
-//  FILE *fp = fopen("fnirsi_1013d_bootloader.bin", "rb");
-  
-  
-  
+  //FILE *fp = fopen("fnirsi_1013d_bootloader.bin", "rb");
   if(fp)
   {
+    boot_ok = 1;
     fread(parm_core->sram1, 1, 32768, fp);
     
     fclose(fp);
+    parm_core->FlashFilePointer = fopen(WB_IMAGE, "rb");
   }
+#else  
+  // GBOOT
+  FILE *fp;
+     
+  // Check SD card first
+  fp = fopen(SD_IMAGE, "rb");
+  if (fp) {
+    fseek(fp, 8192, SEEK_SET);  
+    boot_ok = chk_boot_loader(fp, parm_core->sram1);
+    fclose(fp);
+  }
+  
+  parm_core->FlashFilePointer = fopen(WB_IMAGE, "rb");
+  
+  if(!boot_ok && parm_core->FlashFilePointer) {
+    boot_ok = chk_boot_loader(parm_core->FlashFilePointer, parm_core->sram1);
+  }
+#endif  
 
   //Open the flash image
   //parm_core->FlashFilePointer = fopen("W25Q32_scope.bin", "rb");
-  parm_core->FlashFilePointer = fopen("scope_test_code.bin", "rb");
+  //parm_core->FlashFilePointer = fopen("scope_test_code.bin", "rb");
+  if (boot_ok) {
+    //Open the parameter storage file
+    parm_core->fpgadata.param_file = fopen("scope_settings.bin", "rb+");
   
-  //Open the parameter storage file
-  parm_core->fpgadata.param_file = fopen("scope_settings.bin", "rb+");
-  
-  //Keep running the core until stopped
-  while(quit_armcore_thread_on_zero)
-  {
-    ArmV5tlCore(parm_core);
+    //Keep running the core until stopped
+    while(quit_armcore_thread_on_zero)
+    {
+      ArmV5tlCore(parm_core);
+    }
   }
 
   //Close the files used in the emulator
@@ -295,7 +334,8 @@ void ArmV5tlSetup(PARMV5TL_CORE core)
   core->tracetriggeraddress = MY_TRACE_START_POINT;
 #endif
   
-  core->breakpointaddress = MY_BREAK_POINT_1;
+  //core->breakpointaddress = MY_BREAK_POINT_3;
+  core->breakpointaddress = 0xFF00; // Some fake value
   
   //Setup port handling functions
   core->f1c100s_port[0].porthandler = PortAHandler;
@@ -392,7 +432,9 @@ void ArmV5tlCore(PARMV5TL_CORE core)
   //Breakpoint
   if(*core->program_counter == core->breakpointaddress)
   {
-    memorypointer = NULL;
+    //memorypointer = NULL;
+    core->run = 0;
+    return;    
   }
 
   if(*core->program_counter == MY_BREAK_POINT_2)

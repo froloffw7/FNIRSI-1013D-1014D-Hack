@@ -7,6 +7,9 @@
 
 #include "armv5tl.h"
 
+#define WB_IMAGE "W25Q32.BIN"
+#define SD_IMAGE "SD.IMG"
+
 //----------------------------------------------------------------------------------------------------------------------------------
 //DRAM controller registers low addresses
 #define DRAM_SCONR               0x00000000

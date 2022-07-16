@@ -121,6 +121,7 @@ enum {
 
 enum {
     SD_STAR_FIFO_EMPTY      = (1 << 2),
+    SD_STAR_FIFO_FULL       = (1 << 3),
     SD_STAR_CARD_PRESENT    = (1 << 8),
     SD_STAR_FIFO_LEVEL_1    = (1 << 17),
 };

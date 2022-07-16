@@ -57,6 +57,7 @@ typedef struct {
 } SDRequest;
 
 SDState *sd_init(SDState *sd, bool is_spi);
+bool     sd_receive_ready(SDState *sd);
 bool     sd_data_ready(SDState *sd);
 void     sd_enable(SDState *sd, bool enable);
 int      sd_do_command(SDState *sd, SDRequest *req, uint8_t *response);

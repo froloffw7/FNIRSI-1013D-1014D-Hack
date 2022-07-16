@@ -657,7 +657,7 @@ SDState *sd_init(SDState *sd, bool is_spi)
     if (!sd) {
         sd = (SDState *)malloc(sizeof(SDState));
         memset(sd, 0, sizeof(SDState));
-        sd->blk = fopen("SD.BIN", "r+");
+        sd->blk = fopen(SD_IMAGE, "r+");
 	sd->spi = is_spi;
 	sd->spec_version = SD_PHY_SPECv2_00_VERS;
 	sd_realize(sd);
@@ -1768,9 +1768,9 @@ void sd_write_byte(SDState *sd, uint8_t value)
     if (sd->card_status & (ADDRESS_ERROR | WP_VIOLATION))
         return;
 
-    trace_sdcard_write_data(sd->proto_name,
-                            sd_acmd_name(sd->current_cmd),
-                            sd->current_cmd, value);
+    //trace_sdcard_write_data(sd->proto_name,
+    //                        (sd->card_status & APP_CMD)?sd_acmd_name(sd->current_cmd):sd_cmd_name(sd->current_cmd),
+    //                        sd->current_cmd, value);
     switch (sd->current_cmd) {
     case 24:	/* CMD24:  WRITE_SINGLE_BLOCK */
         sd->data[sd->data_offset ++] = value;
@@ -2028,13 +2028,14 @@ uint8_t sd_read_byte(SDState *sd)
     return ret;
 }
 
-static bool sd_receive_ready(SDState *sd)
+bool sd_receive_ready(SDState *sd)
 {
     return sd->state == sd_receivingdata_state;
 }
 
 bool sd_data_ready(SDState *sd)
 {
+    //f1c100s_log(" SD%s ready\n", sd->state == sd_sendingdata_state ? "":" not");
     return sd->state == sd_sendingdata_state;
 }
 

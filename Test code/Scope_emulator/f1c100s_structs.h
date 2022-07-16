@@ -383,17 +383,14 @@ struct tagF1C100S_MMC
   F1C100S_MEMORY response_crc;      /**< Response CRC */
   F1C100S_MEMORY data_crc[8];       /**< Data CRC */
   F1C100S_MEMORY status_crc;        /**< Status CRC */
+  F1C100S_MEMORY fifo;              /**< Read/Write FIFO */
 
   //Internal registers
-  uint32_t       irq;
+  uint32_t       irq_bits;
   uint32_t       transfer_cnt;
-    /** @} */
-  //Not directly addressable are the two fifo's each uart interface has
-  uint8_t        txfifo[64];
-  uint8_t        rxfifo[64];
   //
   uint32_t       *dma_as;
-  uint32_t       dma_status;
+  uint32_t       dma_irq_bits;
   struct SDState *sd;
 };
 
